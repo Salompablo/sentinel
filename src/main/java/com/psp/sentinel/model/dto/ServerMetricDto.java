@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
-public class SystemStatusDto {
+public class ServerMetricDto {
 
-    private int cpuUsage;
-    private int memUsage;
+    private String serverName;
+    private String region;
+    private double cpuUsage;
+    private double memUsage;
     private Status status;
     private LocalDateTime dateTime;
 }
