@@ -146,7 +146,6 @@ If you deploy this yourself, ensure these variables are set in your cloud provid
 | `SPRING_DATASOURCE_URL` | PostgreSQL JDBC URL (`jdbc:postgresql://...`). |
 | `SPRING_DATASOURCE_USERNAME` | DB User. |
 | `SPRING_DATASOURCE_PASSWORD` | DB Password. |
-| `CORS_ALLOWED_ORIGINS` | Frontend URL (e.g., `https://sentinel-front.vercel.app`). |
 
 ---
 
