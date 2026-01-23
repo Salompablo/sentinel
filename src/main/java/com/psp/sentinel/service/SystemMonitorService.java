@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.psp.sentinel.model.enums.Status.CRITICAL;
 import static com.psp.sentinel.model.enums.Status.STABLE;
@@ -44,27 +46,51 @@ public class SystemMonitorService {
         this.serverLogRepository = serverLogRepository;
     }
 
-    @Scheduled(fixedRate = 3000)
-    public void sendSystemStatus() {
+    private final Map<Long, LocalDateTime> lastAlertTime = new ConcurrentHashMap<>();
 
+    @Scheduled(fixedRate = 10000)
+    public void sendSystemStatus() {
         List<ServerEntity> servers = serverRepository.findAll();
 
         for(ServerEntity server : servers) {
+
+            String currentError = null;
+            String currentLogId = null;
+
             double cpu = Math.random() * 100;
             double ram = Math.random() * 100;
             double temp = 30 + (Math.random() * 50);
 
-            if(cpu > 90) {
+            boolean isCritical = cpu > 90;
+            boolean shouldLog = false;
+
+            if (isCritical) {
+                LocalDateTime lastTime = lastAlertTime.get(server.getId());
+
+                if (lastTime == null || lastTime.isBefore(LocalDateTime.now().minusSeconds(30))) {
+                    shouldLog = true;
+                    lastAlertTime.put(server.getId(), LocalDateTime.now());
+                }
+            }
+
+            if(shouldLog) {
                 String randomError = POSIBLE_ERRORS.get((int) (Math.random() * POSIBLE_ERRORS.size()));
+
+                currentError = randomError;
 
                 ServerLog log = ServerLog.builder()
                         .serverId(server.getId())
+                        .serverName(server.getName())
+                        .region(server.getRegion())
                         .errorType("CRITICAL_FAILURE")
                         .content(randomError)
                         .timestamp(LocalDateTime.now())
                         .build();
 
-                serverLogRepository.save(log);
+                ServerLog savedLog = serverLogRepository.save(log);
+
+                currentLogId = savedLog.getId();
+
                 System.out.println("Incident registered at: " + server.getName()); // TODO: IMPLEMENT SPECIAL SOCKET NOTIFICATION
             }
 
@@ -83,7 +109,9 @@ public class SystemMonitorService {
                     .region(server.getRegion())
                     .cpuUsage(cpu)
                     .memUsage(ram)
-                    .status(cpu > 90 ? CRITICAL : STABLE)
+                    .status(isCritical ? CRITICAL : STABLE)
+                    .latestError(shouldLog ? currentError : null)
+                    .latestLogId(shouldLog ? currentLogId : null)
                     .dateTime(LocalDateTime.now())
                     .build();
 
