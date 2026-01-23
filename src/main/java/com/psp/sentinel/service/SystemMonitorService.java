@@ -4,10 +4,10 @@ import com.psp.sentinel.model.document.ServerLog;
 import com.psp.sentinel.model.document.ServerMetric;
 import com.psp.sentinel.model.dto.ServerMetricDto;
 import com.psp.sentinel.model.entity.ServerEntity;
-import com.psp.sentinel.model.enums.Status;
 import com.psp.sentinel.repository.ServerLogRepository;
 import com.psp.sentinel.repository.ServerMetricRepository;
 import com.psp.sentinel.repository.ServerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ import static com.psp.sentinel.model.enums.Status.CRITICAL;
 import static com.psp.sentinel.model.enums.Status.STABLE;
 
 @Service
+@Slf4j
 public class SystemMonitorService {
 
     private final List<String> POSIBLE_ERRORS = List.of(
@@ -75,10 +76,9 @@ public class SystemMonitorService {
 
             if(shouldLog) {
                 String randomError = POSIBLE_ERRORS.get((int) (Math.random() * POSIBLE_ERRORS.size()));
-
                 currentError = randomError;
 
-                ServerLog log = ServerLog.builder()
+                ServerLog incidentLog = ServerLog.builder()
                         .serverId(server.getId())
                         .serverName(server.getName())
                         .region(server.getRegion())
@@ -87,9 +87,11 @@ public class SystemMonitorService {
                         .timestamp(LocalDateTime.now())
                         .build();
 
-                ServerLog savedLog = serverLogRepository.save(log);
+                ServerLog savedLog = serverLogRepository.save(incidentLog);
 
                 currentLogId = savedLog.getId();
+
+                log.warn("Incident registered at: {}", server.getName());
             }
 
             ServerMetric metric = ServerMetric.builder()
@@ -114,6 +116,7 @@ public class SystemMonitorService {
                     .build();
 
             messagingTemplate.convertAndSend("/topic/system-metrics", payload);
+            log.debug("Metric sent to: {}", server.getName());
         }
     }
 }
