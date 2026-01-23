@@ -18,5 +18,7 @@ public class ServerMetricDto {
     private double cpuUsage;
     private double memUsage;
     private Status status;
+    private String latestError;
+    private String latestLogId;
     private LocalDateTime dateTime;
 }
