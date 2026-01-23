@@ -90,8 +90,6 @@ public class SystemMonitorService {
                 ServerLog savedLog = serverLogRepository.save(log);
 
                 currentLogId = savedLog.getId();
-
-                System.out.println("Incident registered at: " + server.getName()); // TODO: IMPLEMENT SPECIAL SOCKET NOTIFICATION
             }
 
             ServerMetric metric = ServerMetric.builder()
@@ -116,8 +114,6 @@ public class SystemMonitorService {
                     .build();
 
             messagingTemplate.convertAndSend("/topic/system-metrics", payload);
-
-            System.out.println("Metric sent to: " + server.getName());
         }
     }
 }
