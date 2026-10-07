@@ -1,12 +1,12 @@
 # 🛡️ Sentinel API - AI-Powered Infrastructure Monitoring
 
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4-brightgreen?style=for-the-badge&logo=springboot)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-brightgreen?style=for-the-badge&logo=springboot)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker)
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT_4o-412991?style=for-the-badge&logo=openai)
-[![Deploy Status](https://img.shields.io/badge/Live_Demo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://sentinel-front.vercel.app)
+[![Deploy Status](https://img.shields.io/badge/Live_Demo-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://sentinel-front-eight.vercel.app)
 
 **Sentinel API** is the backend core of the Sentinel observability platform. It simulates a high-traffic server farm, ingests real-time metrics, detects critical anomalies, and leverages **Generative AI** to provide automated Root Cause Analysis (RCA) for SRE teams.
 
@@ -50,7 +50,7 @@ graph TD
 ## 🚀 Key Features
 
 * **⚡ Real-Time Simulation Engine:** Generates CPU, RAM, and Temperature metrics for a distributed server cluster with simulated entropy and failures.
-* **📡 WebSocket Broadcasting:** Pushes metrics to connected clients with sub-100ms latency using **Spring WebSocket (STOMP)**.
+* **📡 WebSocket Broadcasting:** Pushes metrics to connected clients with low latency using **Spring WebSocket (STOMP)**.
 * **🧠 AI-Powered Diagnostics:** Integrates with **OpenAI (GPT-4o)** via **Spring AI**. When a server crashes, the system generates a context-aware diagnosis and suggested fix.
 * **💾 Polyglot Persistence:**
     * **PostgreSQL:** Stores relational data (Server metadata, configuration, users).
@@ -64,7 +64,7 @@ graph TD
 ## 🛠️ Tech Stack
 
 * **Language:** Java 21
-* **Framework:** Spring Boot 3.4
+* **Framework:** Spring Boot 3.5
 * **Build Tool:** Maven
 * **AI Integration:** Spring AI (OpenAI Provider)
 * **Real-time Protocol:** STOMP over WebSocket
@@ -101,8 +101,8 @@ graph TD
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/your-username/sentinel-backend.git](https://github.com/your-username/sentinel-backend.git)
-cd sentinel-backend
+git clone https://github.com/Salompablo/sentinel.git
+cd sentinel
 ```
 
 ### 2. Configure Environment
