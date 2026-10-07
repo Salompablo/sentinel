@@ -1,0 +1,19 @@
+name: Keep-alive
+
+# Atlas M0 se pausa tras 60 dias sin actividad y Render (plan free) duerme el
+# servicio tras 15 min sin trafico. Este workflow llama cada 3 dias a un endpoint
+# que consulta MongoDB, lo que despierta el backend y cuenta como actividad en Atlas.
+on:
+  schedule:
+    - cron: "0 12 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend (touches MongoDB)
+        run: |
+          curl -fsS --max-time 180 --retry 5 --retry-delay 30 --retry-all-errors \
+            "https://sentinel-backend-mq4g.onrender.com/api/logs" \
+            -o /dev/null -w "HTTP %{http_code}\n"
