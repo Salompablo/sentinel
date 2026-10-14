@@ -1,6 +1,5 @@
 # ===== Maven =====
 target/
-.mvn/
 !.mvn/wrapper/
 !.mvn/wrapper/maven-wrapper.properties
 !.mvn/wrapper/maven-wrapper.jar
